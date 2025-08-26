@@ -84,7 +84,7 @@ function Counter() {
     <>
       <div className="serchBar">
         <input type="text" value={input} onChange={change} onKeyDown={enter} />
-        <button onClick={addItem}>Add</button>
+        <button onClick={addItem}> {editId !== null ? "Update" : "Add"} </button>
       </div>
 
       <h4>All Entered Values:</h4>
