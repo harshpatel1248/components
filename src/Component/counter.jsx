@@ -45,6 +45,23 @@ function Counter() {
     console.log("Updated List:", list);
   }, [list]);
 
+  useEffect(() => {
+    const storage = localStorage.getItem("myData");
+    if (storage) {
+      const data = JSON.parse(storage);
+      if (data.length > 0) {
+        idCounter = Math.max(...data.map((e) => e.id)) + 1;
+      }
+      setIList(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (list.length > 0) {
+      localStorage.setItem("myData", JSON.stringify(list));
+    }
+  }, [list]);
+
   const Delete = (id) => {
     setIList((prev) => {
       const newArr = [...prev];
@@ -59,8 +76,8 @@ function Counter() {
   const Edit = (id) => {
     const toEdit = list.find((item) => item.id === id);
     if (toEdit) {
-      setInput(toEdit.title); // put title into input field
-      setEditId(id); // mark item as being edited
+      setInput(toEdit.title);
+      setEditId(id);
     }
   };
   return (
