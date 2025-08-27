@@ -89,7 +89,7 @@ input {
   letter-spacing: 1px;
 }
 
-.serchBar {
+.searchBar {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,7 +98,7 @@ input {
   gap: 10px;
 }
 
-.serchBar button {
+.searchBar button {
   width: 120px;
   padding: 8px;
   height: 100%;
@@ -133,4 +133,8 @@ input {
   font-size: 12px;
   border-radius: 20px;
   text-align: center;
+}
+
+.search {
+  margin-top: 15px;
 }

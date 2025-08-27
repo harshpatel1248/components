@@ -14,6 +14,9 @@ function Counter() {
   const [input, setInput] = useState("");
   const [list, setIList] = useState([]);
   const [editId, setEditId] = useState(null);
+  const [filteredList, setFilteredList] = useState([]);
+  const [searchInput, setSearch] = useState("");
+  const [showFiltered, setShowFiltered] = useState(false);
 
   const addItem = () => {
     if (input !== "") {
@@ -80,13 +83,73 @@ function Counter() {
       setEditId(id);
     }
   };
+
+  const clearAll = () => {
+    localStorage.removeItem("myData");
+    setIList([]);
+    setInput("");
+    setEditId(null);
+  };
+
+  const search = () => {
+    if (searchInput.trim() === "") {
+      setFilteredList(list);
+    } else {
+      setFilteredList(
+        list.filter((item) =>
+          item.title.toLowerCase().includes(searchInput.toLowerCase())
+        )
+      );
+
+      if (filteredList.length == 0) {
+        alert("Does not exist");
+      }
+
+      return setSearch("");
+    }
+  };
+
   return (
     <>
-      <div className="serchBar">
+      <div className="searchBar">
         <input type="text" value={input} onChange={change} onKeyDown={enter} />
-        <button onClick={addItem}> {editId !== null ? "Update" : "Add"} </button>
+        <button onClick={addItem}> {editId !== null ? "Update" : "Add"}</button>
+        <button
+          onClick={clearAll}
+          style={{
+            marginLeft: "10px",
+            color: "red",
+            fontSize: "10px",
+            width: "130px",
+            fontWeight: "bold",
+          }}
+        >
+          Clear All
+        </button>
       </div>
 
+      <div className="searchBar search">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <button
+          onClick={() => {
+            search(); 
+            setShowFiltered(!showFiltered);
+          }}
+          style={{
+            marginLeft: "10px",
+            fontSize: "15px",
+            width: "130px",
+            fontWeight: "bold",
+          }}
+        >
+          {showFiltered ? "Show List" : "Search"}
+        </button>
+      </div>
       <h4>All Entered Values:</h4>
 
       <table className="table">
@@ -98,7 +161,7 @@ function Counter() {
         </thead>
 
         <tbody>
-          {list.map((val) => (
+          {(filteredList.length > 0 ? filteredList : list).map((val) => (
             <tr key={val.id} className="tr">
               <td className="id">{val.id}</td>
               <td className="title">
