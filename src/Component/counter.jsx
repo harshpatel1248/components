@@ -44,6 +44,12 @@ function Counter() {
     }
   };
 
+  const searchEnter = (e) => {
+    if (e.key === "Enter" && searchInput !== "") {
+      searchList();
+    }
+  };
+
   useEffect(() => {
     console.log("Updated List:", list);
   }, [list]);
@@ -89,23 +95,34 @@ function Counter() {
     setIList([]);
     setInput("");
     setEditId(null);
+    idCounter = 1;
   };
 
   const search = () => {
     if (searchInput.trim() === "") {
       setFilteredList(list);
+      return;
+    }
+
+    const results = list.filter((item) =>
+      item.title.toLowerCase().includes(searchInput.trim().toLowerCase())
+    );
+
+    if (results.length === 0) {
+      alert("Does not exist");
+    }
+
+    setFilteredList(results);
+  };
+
+  const searchList = () => {
+    if (showFiltered) {
+      setShowFiltered(false);
+      setFilteredList([]);
+      setSearch('')
     } else {
-      setFilteredList(
-        list.filter((item) =>
-          item.title.toLowerCase().includes(searchInput.toLowerCase())
-        )
-      );
-
-      if (filteredList.length == 0) {
-        alert("Does not exist");
-      }
-
-      return setSearch("");
+      search();
+      setShowFiltered(true);
     }
   };
 
@@ -132,14 +149,12 @@ function Counter() {
         <input
           type="text"
           value={searchInput}
+          onKeyDown={searchEnter}
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <button
-          onClick={() => {
-            search(); 
-            setShowFiltered(!showFiltered);
-          }}
+          onClick={searchList}
           style={{
             marginLeft: "10px",
             fontSize: "15px",
@@ -161,7 +176,7 @@ function Counter() {
         </thead>
 
         <tbody>
-          {(filteredList.length > 0 ? filteredList : list).map((val) => (
+          {(showFiltered ? filteredList : list).map((val) => (
             <tr key={val.id} className="tr">
               <td className="id">{val.id}</td>
               <td className="title">
